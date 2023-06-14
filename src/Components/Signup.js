@@ -1,7 +1,10 @@
 import React, { useRef } from "react";
 import { Button, Container, Form } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+
+    const navigate = useNavigate();
 
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
@@ -39,6 +42,7 @@ const Signup = () => {
                 }
             }).then((data) => {
                 console.log('user signup successfully')
+                navigate('/login')
             }).catch((err) => {
                 alert(err.message)
             })
@@ -68,9 +72,13 @@ const Signup = () => {
                 <Form.Label>Confirm Password:</Form.Label>
                 <Form.Control type="password" placeholder="Confirm Password" ref={confirmPasswordInputRef} required/>
             </Form.Group>
-            <div className=" mb-3 text-center">
+            <div className="text-center">
                <Button type="submit">Sign Up</Button> 
             </div>
+            <div className="mb-3 text-center">
+                <NavLink to={'/login'}>Log in with existing account</NavLink>
+            </div>
+            
         </Form>
     </Container>
   );
