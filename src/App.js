@@ -5,6 +5,7 @@ import Signup from './Components/Signup';
 import Login from './Components/Login';
 import Home from './Components/Home';
 import ComposeMail from './Components/ComposeMail';
+import MailOpen from './Components/MailOpen';
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
         {path: '/', element: <Signup />},
         {path: '/login', element: <Login />},
         {path: '/home', element: token ? <Home /> : <Login />},
-        {path: '/composeMail', element: token ? <ComposeMail /> : <Login />}
+        {path: '/composeMail', element: token ? <ComposeMail /> : <Login />},
+        {path: '/openMail', element: token ? <MailOpen /> : <Login />}
       ]
     }
   ])
