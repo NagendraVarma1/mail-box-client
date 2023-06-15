@@ -1,27 +1,64 @@
-import React, { Fragment } from "react";
-import { Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
+import {  Button, Container } from "react-bootstrap";
 
 const Home = () => {
-    const navigate = useNavigate();
+
+  const [inbox, setInbox] = useState([]);
+
+  const mail = localStorage.getItem('email');
+  const updatedMail = mail.replace('@','').replace('.','')
+
+  const fetchInboxHandler = () => {
+    fetch(`https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}.json`)
+    .then((res) => {
+      if(res.ok) {
+        return res.json();
+      }
+      else {
+        return res.json().then((data) => {
+          throw new Error('Fetching Inbox Falied!')
+        })
+      }
+    }).then((data) => {
+      if(data) {
+        const allInboxMails = Object.keys(data).map((key) => ({
+          id: key,
+          fromMail: data[key].fromMail,
+          subject: data[key].subject,
+          body: data[key].body
+        }))
+        setInbox(allInboxMails)
+      }
+      else {
+        setInbox([])
+      }
+    }).catch((err) => {
+      alert(err.message)
+    })
+  }
+
+  useEffect(() => {
+    fetchInboxHandler();
+  }, [])
   return (
     <Fragment>
-      <Container style={{ marginTop: "20px", position: "absolute" }}>
-        <Button size="lg" variant="outline-primary" style={{color: 'black'}} onClick={() => navigate('/composeMail')}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-pencil-fill"
-            viewBox="0 0 16 16"
-            style={{ marginRight: "5px" }}
-          >
-            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-          </svg>
-          
-          Compose{" "}
-        </Button>
+      <Container >
+        <div className="text-center mt-2" style={{fontFamily: 'serif'}}>
+          <h1>Inbox</h1>
+        </div>
+        <ul className="list-unstyled">
+          {inbox.map((mail) => (
+            <li key={mail.id}>
+              <Container fluid className = 'shadow-lg mt-4' style={{border: '1px solid black', borderRadius: '5px'}}>
+                <Button variant="ouline-light w-100">
+                <p style={{float: 'left'}}><span style={{fontWeight: 'bold'}}>From: </span>{mail.fromMail}</p>
+                <p><span style={{fontWeight: 'bold'}}>Subject: </span>{mail.subject}</p>
+              </Button>
+              </Container>
+              
+            </li>
+          ))}
+        </ul>
       </Container>
     </Fragment>
   );
