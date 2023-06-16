@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [inbox, setInbox] = useState([]);
-  const [reload, setReload] = useState(true)
+  const [reload, setReload] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const Home = () => {
   const updatedMail = mail.replace("@", "").replace(".", "");
 
   const fetchInboxHandler = () => {
-    setReload(false)
+    setReload(false);
     fetch(
       `https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}.json`
     )
@@ -76,28 +76,35 @@ const Home = () => {
   };
 
   const mailDeleteHandler = (id) => {
-    fetch(`https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}/${id}.json`,{
-      method: 'DELETE',
-    }).then((res) => {
-      if(!res.ok) {
-        throw new Error('Deleting mail failed!')
+    fetch(
+      `https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}/${id}.json`,
+      {
+        method: "DELETE",
       }
-      else {
-        return res.json();
-      }
-    }).then((data) => {
-      setReload(true)
-      console.log(data)
-    }).catch((err) => {
-      alert(err.message)
-    })
-  }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Deleting mail failed!");
+        } else {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        setReload(true);
+        console.log(data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
 
   const unReadMails = inbox.filter((mail) => mail.unreadMail === true);
   const count = unReadMails.length;
 
+  const noMails = inbox.length === 0;
+
   useEffect(() => {
-    if(reload) {
+    if (reload) {
       fetchInboxHandler();
     }
   }, [reload]);
@@ -110,6 +117,11 @@ const Home = () => {
         <div className="text-center mt-2" style={{ fontFamily: "serif" }}>
           <h1>Inbox</h1>
         </div>
+        {noMails && (
+          <Container className="mt-5 text-center">
+            <h1>No Mails....</h1>
+          </Container>
+        )}
         <ul className="list-unstyled">
           {inbox.map((mail) => (
             <li key={mail.id}>
@@ -118,7 +130,7 @@ const Home = () => {
                 className="shadow-lg mt-4"
                 style={{ border: "1px solid black", borderRadius: "5px" }}
               >
-                <div style={{ display: "flex", height: '70px' }}>
+                <div style={{ display: "flex", height: "70px" }}>
                   {mail.unreadMail && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +158,14 @@ const Home = () => {
                       {mail.subject}
                     </p>
                   </Button>
-                  <Button size="sm" variant="outline-danger" style={{height: '40px',marginTop: '15px'}} onClick={() => mailDeleteHandler(mail.id)}>Delete</Button>
+                  <Button
+                    size="sm"
+                    variant="outline-danger"
+                    style={{ height: "40px", marginTop: "15px" }}
+                    onClick={() => mailDeleteHandler(mail.id)}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </Container>
             </li>

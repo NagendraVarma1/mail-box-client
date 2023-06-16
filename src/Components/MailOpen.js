@@ -21,9 +21,12 @@ const MailOpen = () => {
       <div className="m-3">
         <h2>Subject: {mail.subject}</h2>
       </div>
-      <div className="m-3">
+      {mail.fromMail && <div className="m-3">
         <h5>From: {mail.fromMail}</h5>
-      </div>
+      </div>}
+      {mail.toMail && <div className="m-3">
+        <h5>To: {mail.toMail}</h5>
+      </div>}
       <div
         className="m-3 p-3"
         style={{

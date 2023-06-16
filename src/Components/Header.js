@@ -35,6 +35,11 @@ const Header = () => {
     navigate("/home");
   };
 
+  const sentboxClickHandler = () => {
+    setShow(false);
+    navigate("/sentbox");
+  };
+
   const logoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
@@ -113,6 +118,7 @@ const Header = () => {
                     size="lg"
                     variant="outline-primary"
                     style={{ color: "black", margin: "15px" }}
+                    onClick={sentboxClickHandler}
                   >
                     Sent Box
                   </Button>
