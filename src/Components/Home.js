@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [inbox, setInbox] = useState([]);
+  const [reload, setReload] = useState(true)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -13,6 +14,7 @@ const Home = () => {
   const updatedMail = mail.replace("@", "").replace(".", "");
 
   const fetchInboxHandler = () => {
+    setReload(false)
     fetch(
       `https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}.json`
     )
@@ -73,12 +75,32 @@ const Home = () => {
       });
   };
 
+  const mailDeleteHandler = (id) => {
+    fetch(`https://mail-box-client-c7cc0-default-rtdb.firebaseio.com/to${updatedMail}/${id}.json`,{
+      method: 'DELETE',
+    }).then((res) => {
+      if(!res.ok) {
+        throw new Error('Deleting mail failed!')
+      }
+      else {
+        return res.json();
+      }
+    }).then((data) => {
+      setReload(true)
+      console.log(data)
+    }).catch((err) => {
+      alert(err.message)
+    })
+  }
+
   const unReadMails = inbox.filter((mail) => mail.unreadMail === true);
   const count = unReadMails.length;
 
   useEffect(() => {
-    fetchInboxHandler();
-  }, []);
+    if(reload) {
+      fetchInboxHandler();
+    }
+  }, [reload]);
   return (
     <Fragment>
       <Container className="mt-3">
@@ -96,7 +118,7 @@ const Home = () => {
                 className="shadow-lg mt-4"
                 style={{ border: "1px solid black", borderRadius: "5px" }}
               >
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", height: '70px' }}>
                   {mail.unreadMail && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -124,6 +146,7 @@ const Home = () => {
                       {mail.subject}
                     </p>
                   </Button>
+                  <Button size="sm" variant="outline-danger" style={{height: '40px',marginTop: '15px'}} onClick={() => mailDeleteHandler(mail.id)}>Delete</Button>
                 </div>
               </Container>
             </li>

@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const MailOpen = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const mail = useSelector((state) => state.mail.mail);
   const closeMailHandler = () => {
-    navigate('/home')
-  }
-  
+    navigate("/home");
+  };
+
   return (
     <Container
       className="mt-5 shadow-lg"
