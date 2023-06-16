@@ -24,11 +24,13 @@ const ComposeMail = () => {
     const updatedFromMail = fromMail.replace("@", "").replace(".", "");
     const subject = subjectInputRef.current.value;
     const body = editorState.getCurrentContent().getPlainText();
+    const unreadMail = true;
 
     const composedMail = {
       fromMail,
       subject,
       body,
+      unreadMail
     };
 
     const sentBoxMail = {
