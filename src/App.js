@@ -17,7 +17,7 @@ function App() {
       path: '/',
       element: <RootLayout />,
       children: [
-        {path: '/', element: <Signup />},
+        {path: '/', element: token ? <Home/> : <Signup />},
         {path: '/login', element: <Login />},
         {path: '/home', element: token ? <Home /> : <Login />},
         {path: '/composeMail', element: token ? <ComposeMail /> : <Login />},

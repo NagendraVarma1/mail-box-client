@@ -7,7 +7,12 @@ const MailOpen = () => {
   const navigate = useNavigate();
   const mail = useSelector((state) => state.mail.mail);
   const closeMailHandler = () => {
-    navigate("/home");
+    if(mail.fromMail) {
+      navigate("/home");
+    }
+    else {
+      navigate("/sentbox");
+    }
   };
 
   return (
